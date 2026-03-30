@@ -14,7 +14,7 @@ def process_user_data(user_input_id: str) -> dict[str, object]:
     try:
         user_id = int(user_input_id)
     except ValueError as exc:
-        raise ValueError("El id del usuario debe ser un numero entero") from exc
+        raise ValueError("El id tiene que ser entero") from exc
 
     query, params = build_user_query(user_id)
     return {"query": query, "params": params}

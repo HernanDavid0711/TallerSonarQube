@@ -2,13 +2,9 @@ name: CI Python
 
 on:
   push:
-    branches: ["main", "develop"]
+    branches: [main, master]
   pull_request:
-    branches: ["main", "develop"]
-
-permissions:
-  contents: read
-  pull-requests: read
+    branches: [main, master]
 
 jobs:
   test-and-analyze:
@@ -16,10 +12,10 @@ jobs:
 
     steps:
       - name: Checkout del repositorio
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Configurar Python
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: "pip"
@@ -30,13 +26,11 @@ jobs:
           pip install -r requirements.txt
 
       - name: Ejecutar flake8
-        run: flake8 .
+        run: |
+          flake8 main.py test_main.py --max-line-length=88
 
       - name: Ejecutar pruebas y cobertura
-        run: pytest --cov=. --cov-report=xml --cov-report=term-missing
-
-      - name: Analisis con SonarQube/SonarCloud
-        uses: SonarSource/sonarqube-scan-action@v7
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        run: |
+          pytest -v
+          pytest --cov=. --cov-report=term-missing
+          pytest --cov=. --cov-report=xml

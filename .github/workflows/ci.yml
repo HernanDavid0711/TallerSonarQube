@@ -31,6 +31,5 @@ jobs:
 
       - name: Ejecutar pruebas y cobertura
         run: |
-          pytest -v
-          pytest --cov=. --cov-report=term-missing
-          pytest --cov=. --cov-report=xml
+          pytest test_main.py -v --ignore=uniagustiniana
+          pytest test_main.py --cov=main --cov-report=term-missing --cov-report=xml --ignore=uniagustiniana

@@ -33,3 +33,4 @@ jobs:
         run: |
           pytest test_main.py -v --ignore=uniagustiniana
           pytest test_main.py --cov=main --cov-report=term-missing --cov-report=xml --ignore=uniagustiniana
+

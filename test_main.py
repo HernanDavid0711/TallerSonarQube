@@ -1,27 +1,37 @@
 import pytest
-from main import calculate_discount, process_user_data
+
+from main import calculate_discount, process_user_data, save_to_file
+
 
 def test_calculate_discount_senior():
-    # Prueba el descuento para mayores de 60 años
     assert calculate_discount(100, 65) == 50.0
 
+
 def test_calculate_discount_adult():
-    # Prueba el descuento para adultos (10%)
     assert calculate_discount(100, 30) == 10.0
 
+
 def test_calculate_discount_minor():
-    # Prueba que los menores de 18 no tengan descuento (0)
-    assert calculate_discount(100, 15) == 0
+    assert calculate_discount(100, 15) == 0.0
 
-def test_process_user_data_format():
-    # Verifica que el retorno sea un string (aunque el SQL esté mal construido)
-    result = process_user_data("105")
-    assert isinstance(result, str)
-    assert "105" in result
 
-#  TEST FALLIDO (Reto para el alumno):
-# Si el alumno refactoriza calculate_discount para manejar precios negativos,
-# este test debería pasar. Actualmente, si el código original no lo maneja, 
-# el estudiante debe decidir qué debe retornar.
 def test_calculate_discount_negative_price():
-    assert calculate_discount(-100, 25) == 1
+    assert calculate_discount(-100, 25) == 0.0
+
+
+def test_process_user_data_returns_parameterized_query():
+    result = process_user_data("105")
+    assert result["query"] == "SELECT * FROM users WHERE id = %s"
+    assert result["params"] == (105,)
+
+
+def test_process_user_data_rejects_invalid_value():
+    with pytest.raises(ValueError):
+        process_user_data("abc")
+
+
+def test_save_to_file(tmp_path):
+    file_path = tmp_path / "log.txt"
+    saved_path = save_to_file("hola", str(file_path))
+    assert saved_path.exists()
+    assert saved_path.read_text(encoding="utf-8") == "hola"

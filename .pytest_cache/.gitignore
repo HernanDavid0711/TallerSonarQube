@@ -1,8 +1,10 @@
 uniagustiniana/
 venv/
 .venv/
-__pycache__/
 .pytest_cache/
+__pycache__/
+v/
 .coverage
 coverage.xml
 log.txt
+*.pyc
